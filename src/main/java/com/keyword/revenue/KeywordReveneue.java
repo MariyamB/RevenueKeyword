@@ -25,7 +25,7 @@ public class KeywordReveneue {
         Files.write(Paths.get(dateFormat.format(date) + "_SearchKeywordPerformance.tab"), String.format("%s\t%s\t %s",
                 "Search Engine Domain", "Search Keyword", "Revenue").getBytes(), StandardOpenOption.APPEND);
         try (BufferedReader br = keywordUtil.getBufferedReader("data.sql")) {
-            keywordUtil.toSql(br).forEach(r -> {
+            keywordUtil.SearchRevenue(br).forEach(r -> {
                 try {
                     System.out.print(r);
                     Files.write(Paths.get(dateFormat.format(date) + "_SearchKeywordPerformance.tab"), r.getBytes(), StandardOpenOption.APPEND);

@@ -20,7 +20,7 @@ public class KeywordUtil {
         return new BufferedReader(new InputStreamReader(cl.getResourceAsStream(fileName)));
     }
 
-    public Stream<String> toSql(BufferedReader br) throws IOException {
+    public Stream<String> SearchRevenue(BufferedReader br) throws IOException {
         String[] tableName = br.readLine().split("\t");
         ArrayList<String> columnNames = new ArrayList<>();
         do {
@@ -36,20 +36,29 @@ public class KeywordUtil {
         System.out.println(String.format("%s\t%s\t %s",
                 "Search Engine Domain", "Search Keyword", "Revenue"));
         return br.lines()
-                .map(row -> row.replace(";", " "))
+                //.map(row -> row.replace(";", " "))
                 .map(row -> {
                     if (!domainAndSearchName(row.split("\t")[11], "search").isEmpty()) { //Splitting the Referrer column from the columns
-                        System.out.println(row.split("\t")[10]);
-                        return String.format("\n%s\t %s",
-                                domainAndSearchName(row.split("\t")[11], "domain"), domainAndSearchName(row.split("\t")[11], "search"));
+                        //System.out.println(row.split("\t")[10]);
+                        return formattedOutPut(row.split("\t")[11], row.split("\t")[10]);
                     } else
                         return "";
                 });
     }
+
+    public  String formattedOutPut (String domainAndSearch, String revenueString)
+    {
+
+        String revenue="";
+        if (revenue.split(";").length>=4)
+            revenue= revenueString.split(";")[3];
+        return String.format("\n%s\t %s \t %s",
+                domainAndSearchName(domainAndSearch, "domain"), domainAndSearchName(domainAndSearch, "search"),revenue );
+    }
     /**
     Function to return Domain and Search Query
     **/
-    public static String domainAndSearchName(String s, String type) {
+    public  String domainAndSearchName(String s, String type) {
         String domain = "";
         URL aURL = null;
         try {
@@ -65,7 +74,7 @@ public class KeywordUtil {
     /**
      Function to return Search keyword based on regex supplied
      **/
-    public static String findSearchQuery(String url) {
+    public  String findSearchQuery(String url) {
         Matcher m = p.matcher(url);
         if (m.find())
             return m.group(3);
